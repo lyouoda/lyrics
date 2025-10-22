@@ -1,0 +1,72 @@
+/* Google Fontsより「しっぽり明朝」を全体に適用し、上品なフォントスタイルを設定 */
+body {
+    font-family: 'Shippori Mincho', serif;
+    background-color: #F8F8F8; /* 薄いグレー */
+    color: #333333;
+    line-height: 1.75;
+    font-size: 16px;
+}
+
+/* ヘッダーのスタイル - クリーンな白を再現 */
+header {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background-color: white;
+}
+
+/* Material Symbolsの基本スタイル */
+.material-symbols-outlined {
+    font-size: 24px;
+    color: #555555;
+}
+
+/* メインの歌詞カードのスタイル */
+.lyric-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #E0E0E0;
+    background-color: white; 
+    border-radius: 8px; /* 角丸を大きく (4px -> 8px) */
+    box-shadow: none; 
+}
+.lyric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); /* ホバー時の影を少し強調 */
+}
+
+/* 歌詞本文の整形 */
+.lyric-content {
+    white-space: pre-wrap;
+    text-align: left;
+    line-height: 2.0;
+    font-size: 1.05rem;
+    color: #444;
+}
+
+/* 検索フォームの装飾 */
+#search-input {
+    transition: border-color 0.2s;
+    border-radius: 8px; /* 角丸を大きく (4px -> 8px) */
+}
+#search-input:focus {
+    border-color: #BBBBBB; 
+    box-shadow: 0 0 0 1px #BBBBBB;
+}
+
+/* モーダル本体の角丸 */
+.modal-content-area {
+    border-radius: 12px; /* モーダルはさらに大きく */
+}
+
+/* 歌詞表示モーダルの背景 */
+.modal-bg {
+    background-color: rgba(0, 0, 0, 0.6); 
+}
+
+/* プロフィールコンテンツのテキスト整形 */
+#profile-content br {
+    display: block; /* Markdown改行を反映 */
+    content: "";
+    margin-top: 10px; /* 段落間にスペース */
+}
+#profile-content h3 {
+    margin-top: 20px;
+}
