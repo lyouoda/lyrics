@@ -3,251 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>しっぽり歌詞コレクション - Shippori Lyric Collection</title>
-    <!-- Tailwind CSS (レスポンシブ対応とモダンなデザインのために利用) --><script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fontsより「しっぽり明朝」をインポート --><link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
-    <!-- Google Fontsより Material Symbols (アイコン) をインポート --><link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
-    <style>
-        /* しっぽり明朝を全体に適用し、上品なフォントスタイルを設定 */
-        body {
-            font-family: 'Shippori Mincho', serif;
-            background-color: #F8F8F8; /* 画像に近い非常に薄いグレー */
-            color: #333333;
-            line-height: 1.75; /* 読みやすい行間 */
-            font-size: 16px;
-        }
-
-        /* ヘッダーのスタイル - 画像のクリーンな白を再現 */
-        header {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* 影を控えめに */
-            background-color: white;
-        }
-        
-        /* Material Symbolsの基本スタイル */
-        .material-symbols-outlined {
-            font-size: 24px; /* アイコンサイズ */
-            color: #555555; /* アイコンの色を少し濃いグレーに */
-        }
-
-        /* メインの歌詞カードのスタイル */
-        .lyric-card {
-            transition: transform 0.2s, box-shadow 0.2s;
-            border-left: 5px solid #E0E0E0; /* アクセントカラーを薄いグレーに */
-            background-color: white; 
-            border-radius: 12px; /* 角を画像のように少し丸く */
-        }
-        .lyric-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); /* ホバー時の影も調整 */
-        }
-
-        /* 歌詞本文の整形 */
-        .lyric-content {
-            white-space: pre-wrap; /* 改行を保持 */
-            text-align: left;
-            line-height: 2.0; /* 歌詞は特に広めに */
-            font-size: 1.05rem;
-            color: #444;
-        }
-
-        /* 検索フォームの装飾 */
-        #search-input {
-            transition: border-color 0.2s;
-            border-radius: 8px;
-        }
-        #search-input:focus {
-            border-color: #BBBBBB; /* フォーカス時のボーダー色もグレーに */
-            box-shadow: 0 0 0 3px rgba(187, 187, 187, 0.3);
-        }
-
-        /* 歌詞表示モーダルの背景 */
-        .modal-bg {
-            background-color: rgba(0, 0, 0, 0.6); /* モーダルの背景を少し濃くしてコンテンツを際立たせる */
-        }
-
-        /* モーダル内のタイトル色も調整 */
-        #modal-title {
-            color: #333333; /* タイトル色も濃いグレーに */
-        }
-    </style>
+    <title>しっぽり歌詞帖 - 個人コレクション</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    
+    <link rel="stylesheet" href="src/style.css">
 </head>
 <body class="min-h-screen">
 
-    <!-- ヘッダー --><header class="bg-white sticky top-0 z-10">
+    <header class="bg-white sticky top-0 z-10">
         <div class="max-w-4xl mx-auto p-4 flex justify-between items-center h-16">
-            <!-- 中央: タイトル --><h1 class="text-xl font-semibold text-[#333333] flex-grow text-center sm:text-left sm:ml-4">
-                しっぽり
+            <h1 class="text-xl font-semibold text-[#333333]">
+                しっぽり歌詞帖
             </h1>
+            <nav>
+                <button id="nav-home" class="p-2 ml-4 font-medium text-gray-700 hover:text-gray-900 border-b-2 border-transparent transition duration-150">
+                    Home
+                </button>
+                <button id="nav-profile" class="p-2 ml-4 font-medium text-gray-700 hover:text-gray-900 border-b-2 border-transparent transition duration-150">
+                    Profile
+                </button>
+            </nav>
         </div>
     </header>
 
-    <!-- メインコンテンツ --><main class="max-w-4xl mx-auto p-4">
+    <main class="max-w-4xl mx-auto p-4">
         
-        <!-- 検索バーをメインコンテンツ上部に配置 --><div class="mb-6">
-            <input type="text" id="search-input" placeholder="曲名やアーティストで検索..."
-                   class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none">
-        </div>
+        <section id="page-home">
+            <div class="mb-6">
+                <input type="text" id="search-input" placeholder="曲名で検索..."
+                       class="w-full p-3 border border-gray-300 focus:outline-none">
+            </div>
 
-        <!-- 歌詞リスト表示エリア --><div id="lyrics-list" class="space-y-6">
-            <!-- 歌詞カードがここにJavaScriptによって挿入されます --></div>
+            <div id="lyrics-list" class="space-y-3">
+                </div>
 
-        <!-- 検索結果が0件の場合のメッセージ --><div id="no-results" class="text-center text-gray-500 py-16 hidden">
-            <p class="text-xl">該当する歌詞が見つかりませんでした。</p>
-            <p class="mt-2">別のキーワードでお試しください。</p>
-        </div>
+            <div id="no-results" class="text-center text-gray-500 py-16 hidden">
+                <p class="text-xl">該当する曲が見つかりませんでした。</p>
+                <p class="mt-2">別のキーワードでお試しください。</p>
+            </div>
+        </section>
+
+        <section id="page-profile" class="hidden pt-6">
+            <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Profile</h2>
+            <div id="profile-content" class="bg-white p-6 shadow-md" style="border-radius: 8px;">
+                <p>Loading profile...</p>
+                </div>
+        </section>
     </main>
 
-    <!-- 歌詞全文表示モーダル (最初は非表示) --><div id="lyric-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300">
+    <div id="lyric-modal" class="modal-bg fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 modal-content-area">
             <div class="p-6 sm:p-8">
                 <div class="flex justify-between items-start mb-4">
                     <div>
                         <h2 id="modal-title" class="text-3xl font-semibold mb-1 text-[#333333]"></h2>
-                        <p id="modal-artist" class="text-lg text-gray-600"></p>
                     </div>
-                    <!-- 閉じるボタン（右上）: バツアイコンのみ --><button id="close-modal-top" class="p-2 hover:bg-gray-100 rounded-full transition duration-150" aria-label="モーダルを閉じる">
+                    <button id="close-modal-top" class="p-2 hover:bg-gray-100 transition duration-150" aria-label="モーダルを閉じる">
                         <span class="material-symbols-outlined">close</span>
                     </button>
                 </div>
 
-                <!-- 歌詞本文 --><div id="modal-content" class="lyric-content border-t border-gray-200 pt-4">
-                    <!-- 歌詞本文がここに表示されます --></div>
+                <div id="modal-content" class="lyric-content border-t border-gray-200 pt-4">
+                    </div>
             </div>
         </div>
     </div>
 
-
-    <script>
-        // 歌詞データ（JSON形式をJavaScript内で定義）
-        const LYRIC_DATA = [
-            {
-                id: 1,
-                title: "遠い灯台",
-                artist: "雨音カルテット",
-                lyrics: "静かな夜、海に立つ灯台は\n遠く瞬き、帰りを待つ船の影。\nしっぽりとした明朝体が\n言葉を深海へと誘う。\n\n波の音が聞こえるかい？\n君の呼ぶ声と似た、さざめき。\nああ、この詩は誰に届く。\n光はいつも、ただそこにある。",
-                tags: ["海", "夜", "静寂"]
-            },
-            {
-                id: 2,
-                title: "路地裏の猫",
-                artist: "珈琲と詩",
-                lyrics: "夕焼けの路地裏に、一匹の黒猫。\n瞳は琥珀、世界をじっと見つめている。\n誰にも言えない秘密を抱えて、\n今日も静かに、風を待っている。\n\n明日は晴れるだろうか。\nそれとも、また雨の匂いだろうか。\n猫だけが知っている、この街の真実。",
-                tags: ["猫", "日常", "秘密"]
-            },
-            {
-                id: 3,
-                title: "モノクロームの記憶",
-                artist: "ペン先の人",
-                lyrics: "セピア色の写真の中、君は笑う。\n遠い昔の出来事が、まるで昨日のことのよう。\n色彩のない世界で、ただ一つ。\n鮮やかなのは、君の横顔。\n\n思い出はいつも、静かに積もる雪。\n溶けることもなく、ただ白く、白く。\nしっぽり明朝で読む、過去への手紙。",
-                tags: ["記憶", "過去", "手紙"]
-            }
-        ];
-
-        const lyricsList = document.getElementById('lyrics-list');
-        const searchInput = document.getElementById('search-input');
-        const noResults = document.getElementById('no-results');
-        const modal = document.getElementById('lyric-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalArtist = document.getElementById('modal-artist');
-        const modalContent = document.getElementById('modal-content');
-        const closeModalTopButton = document.getElementById('close-modal-top'); 
-
-        // 1. 歌詞カードを生成して表示する関数
-        function renderLyrics(data) {
-            lyricsList.innerHTML = '';
-            
-            if (data.length === 0) {
-                noResults.classList.remove('hidden');
-                return;
-            }
-            noResults.classList.add('hidden');
-
-            data.forEach(lyric => {
-                const card = document.createElement('div');
-                card.className = 'lyric-card bg-white rounded-xl p-6 shadow-md cursor-pointer hover:shadow-lg';
-                card.setAttribute('data-id', lyric.id);
-
-                // タイトルとアーティスト名
-                card.innerHTML = `
-                    <h2 class="text-xl font-semibold mb-1">${lyric.title}</h2>
-                    <p class="text-gray-500 mb-3">${lyric.artist}</p>
-                    <div class="text-sm text-gray-700 h-10 overflow-hidden relative">
-                        <!-- 歌詞の最初の数行だけをプレビュー表示 -->${lyric.lyrics.split('\n').slice(0, 2).join('<br>')}...
-                        <div class="absolute inset-x-0 bottom-0 h-4 bg-gradient-to-t from-white to-transparent"></div>
-                    </div>
-                `;
-                
-                // クリックでモーダルを開くイベントリスナーを追加
-                card.addEventListener('click', () => openModal(lyric));
-                lyricsList.appendChild(card);
-            });
-        }
-
-        // 2. 検索機能
-        function handleSearch() {
-            const query = searchInput.value.toLowerCase().trim();
-
-            if (query === '') {
-                renderLyrics(LYRIC_DATA); // 検索ワードがない場合は全件表示
-                return;
-            }
-
-            const filteredData = LYRIC_DATA.filter(lyric =>
-                lyric.title.toLowerCase().includes(query) ||
-                lyric.artist.toLowerCase().includes(query) ||
-                lyric.lyrics.toLowerCase().includes(query)
-            );
-
-            renderLyrics(filteredData);
-        }
-
-        // 3. モーダルを開く関数
-        function openModal(lyric) {
-            modalTitle.textContent = lyric.title;
-            modalArtist.textContent = lyric.artist;
-            modalContent.innerHTML = lyric.lyrics; 
-            
-            modal.classList.remove('hidden');
-            // アニメーションのために少し遅延させて transform を解除
-            setTimeout(() => {
-                modal.querySelector('div').classList.remove('scale-95');
-                modal.querySelector('div').classList.add('scale-100');
-            }, 10);
-            document.body.style.overflow = 'hidden'; // 背景スクロールを禁止
-        }
-
-        // 4. モーダルを閉じる関数
-        function closeModal() {
-            modal.querySelector('div').classList.remove('scale-100');
-            modal.querySelector('div').classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300); // アニメーション時間に合わせて遅延
-            document.body.style.overflow = '';
-        }
-
-        // イベントリスナーの設定
-        searchInput.addEventListener('input', handleSearch);
-        closeModalTopButton.addEventListener('click', closeModal); 
-
-        // モーダル背景クリックで閉じる
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        // ESCキーで閉じる
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                closeModal();
-            }
-        });
-
-        // 初期表示
-        window.onload = () => {
-            renderLyrics(LYRIC_DATA);
-        };
-    </script>
+    <script src="src/script.js"></script>
 </body>
 </html>
