@@ -42,23 +42,12 @@ async function fetchLyricManifest() {
 }
 
 // 非同期: ファイルの内容をフェッチする汎用関数
-async function fetchContent(filename) {
+async function fetchContent(url) {
     try {
-        let path;
-
-        if (filename === PROFILE_URL) {
-            // プロフィールはサイトのルートからフェッチ
-            path = PROFILE_URL;
-        } else {
-            // 歌詞ファイルは外部URLからフェッチ
-            // 例: https://lyouoda.github.io/lyrics/lyrics/yume.txt
-            path = LYRICS_BASE_URL + filename;
-        }
-
-        const response = await fetch(path);
+        const response = await fetch(url);
 
         if (!response.ok) {
-            return `Error loading content: ${response.status} ${response.statusText} (${path})`;
+            return `Error loading content: ${response.status} ${response.statusText} (${url})`;
         }
         return await response.text();
     } catch (error) {
@@ -194,7 +183,8 @@ async function initialize() {
     
     // 各歌詞ファイルの内容を全て取得し、データ構造を構築
     const lyricsDataPromises = filenames.map(async (filename) => {
-        const content = await fetchContent(filename);
+        const url = LYRICS_BASE_URL + filename;
+        const content = await fetchContent(url);
         const lines = content.split('\n');
         
         // 1行目をタイトル、2行目をアーティストとして解釈
