@@ -1,7 +1,15 @@
-// 読み込む歌詞ファイルのリスト（ファイル名から.txtを削除したものがタイトルになる）
-// このリストを更新することで、新しい歌詞を追加できます。
-const LYRIC_FILENAMES = ['yume.txt', 'kaze.txt', 'monokuro.txt'];
+// 設定
+const MANIFEST_URL = 'https://lyouoda.github.io/lyrics/lyrics/manifest.json'; // 歌詞リストのJSON
 const PROFILE_FILENAME = 'profile.md';
+const LYRICS_BASE_URL = 'https://lyouoda.github.io/lyrics/lyrics/';
+
+// グローバル変数
+/**
+ * @type {Array<{filename: string, title: string, artist: string, content: string, preview: string}>}
+ * 全ての歌詞データを保持する配列
+ */
+let ALL_LYRICS_DATA = [];
+let currentPage = 'home'; // ページ状態管理
 
 // DOM要素
 const lyricsList = document.getElementById('lyrics-list');
@@ -11,22 +19,44 @@ const modal = document.getElementById('lyric-modal');
 const modalTitle = document.getElementById('modal-title');
 const modalContent = document.getElementById('modal-content');
 const closeModalTopButton = document.getElementById('close-modal-top'); 
-
 const pageHome = document.getElementById('page-home');
 const pageProfile = document.getElementById('page-profile');
 const profileContent = document.getElementById('profile-content');
 const navHome = document.getElementById('nav-home');
 const navProfile = document.getElementById('nav-profile');
 
-let currentPage = 'home'; // ページ状態管理
+// 歌詞リスト(manifest.json)を読み込む
+async function fetchLyricManifest() {
+    try {
+        const response = await fetch(MANIFEST_URL);
+        if (!response.ok) {
+            console.error('Manifest file not found:', response.statusText);
+            return [];
+        }
+        const data = await response.json();
+        return data.files || []; // manifest.jsonに "files": [...] があることを期待
+    } catch (error) {
+        console.error('Error fetching manifest:', error);
+        return [];
+    }
+}
 
 // 非同期: ファイルの内容をフェッチする汎用関数
 async function fetchContent(filename) {
     try {
-        // ファイルパスを 'lyrics/' やルートから指定 (ファイル配置に合わせる)
-        const path = filename === PROFILE_FILENAME ? filename : `lyrics/${filename}`;
+        let path;
+
+        if (filename === PROFILE_FILENAME) {
+            // プロフィールはサイトのルートからフェッチ
+            path = filename; 
+        } else {
+            // 歌詞ファイルは外部URLからフェッチ
+            // 例: https://lyouoda.github.io/lyrics/lyrics/yume.txt
+            path = LYRICS_BASE_URL + filename;
+        }
+
         const response = await fetch(path);
-        
+
         if (!response.ok) {
             return `Error loading content: ${response.status} ${response.statusText} (${path})`;
         }
@@ -38,27 +68,31 @@ async function fetchContent(filename) {
 
 // ページ切り替え関数
 async function showPage(page) {
+    if (currentPage === page && page === 'profile' && profileContent.innerHTML !== '<p>Loading profile...</p>') return;
+
     currentPage = page;
-    navHome.classList.remove('border-gray-900', 'border-b-2');
-    navProfile.classList.remove('border-gray-900', 'border-b-2');
+    navHome.classList.remove('active');
+    navProfile.classList.remove('active');
 
     if (page === 'home') {
         pageHome.classList.remove('hidden');
         pageProfile.classList.add('hidden');
-        navHome.classList.add('border-gray-900', 'border-b-2');
+        navHome.classList.add('active');
     } else if (page === 'profile') {
         pageHome.classList.add('hidden');
         pageProfile.classList.remove('hidden');
-        navProfile.classList.add('border-gray-900', 'border-b-2');
-        
+        navProfile.classList.add('active');
         // プロフィール内容をロード
         if (profileContent.textContent === 'Loading profile...') {
+            // profile.md はローカルから読み込む
             const content = await fetchContent(PROFILE_FILENAME);
-            
-            // Markdown風のコンテンツを単純なHTMLに変換
+
+            // 簡易的なMarkdownパーサー
             const htmlContent = content
-                .replace(/^## (.*$)/gim, '<h3 class="text-xl font-semibold mt-4 mb-2">$1</h3>') // ##をh3に
-                .replace(/^### (.*$)/gim, '<h4 class="text-lg font-medium mt-3 mb-1">$1</h4>') // ###をh4に
+                .replace(/^## (.*$)/gim, '<h3>$1</h3>') // ##をh3に
+                .replace(/^### (.*$)/gim, '<h4>$1</h4>') // ###をh4に
+                // [text](url) を <a href="url" target="_blank">text</a> に変換
+                .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
                 .replace(/\n\n/g, '<br><br>'); // 連続改行を段落区切りに
 
             profileContent.innerHTML = htmlContent;
@@ -66,90 +100,79 @@ async function showPage(page) {
     }
 }
 
-// 1. 歌詞カードを生成して表示する関数
-function renderLyrics(filenames) {
+// 歌詞カードを生成して表示する関数
+function renderLyrics(lyrics) {
     lyricsList.innerHTML = '';
     
-    if (filenames.length === 0) {
+    if (lyrics.length === 0) {
         noResults.classList.remove('hidden');
         return;
     }
     noResults.classList.add('hidden');
 
-    filenames.forEach(filename => {
-        // ファイル名から '.txt' を削除してタイトルを生成
-        const title = filename.replace(/\.txt$/, ''); 
-
+    lyrics.forEach(lyric => {
         const card = document.createElement('div');
-        card.className = 'lyric-card bg-white p-6 cursor-pointer hover:shadow-lg'; 
-        card.setAttribute('data-filename', filename);
+        card.className = 'lyric-card'; 
+        card.setAttribute('data-filename', lyric.filename);
         
         card.innerHTML = `
-            <h2 class="text-xl font-semibold mb-3">${title}</h2>
-            <div class="text-sm text-gray-700 h-10 overflow-hidden relative">
-                <p class="lyric-preview">クリックして歌詞を読み込みます...</p>
-                <div class="absolute inset-x-0 bottom-0 h-4 bg-gradient-to-t from-white to-transparent"></div>
-            </div>
+            <h3 class="lyric-card-title">${lyric.title || '無題'}</h3>
+            <p class="lyric-preview">${lyric.preview || 'クリックして歌詞を読み込みます...'}</p>
         `;
         
         // クリックでモーダルを開くイベントリスナーを追加
-        card.addEventListener('click', () => openModal(filename, title));
+        card.addEventListener('click', () => openModal(lyric.filename, lyric.title));
         lyricsList.appendChild(card);
     });
 }
 
-// 2. 検索機能 (ファイル名/タイトル検索のみ)
+// 検索機能
 function handleSearch() {
     const query = searchInput.value.toLowerCase().trim();
 
     if (query === '') {
-        renderLyrics(LYRIC_FILENAMES);
+        renderLyrics(ALL_LYRICS_DATA);
         return;
     }
 
-    const filteredData = LYRIC_FILENAMES.filter(filename =>
-        filename.replace(/\.txt$/, '').toLowerCase().includes(query) // タイトル (ファイル名) 検索
+    const filteredData = ALL_LYRICS_DATA.filter(lyric => {
+        return lyric.title.toLowerCase().includes(query) || lyric.content.toLowerCase().includes(query);
+    }
     );
 
     renderLyrics(filteredData);
 }
 
-// 3. モーダルを開く関数
-async function openModal(filename, title) {
+// モーダルを開く関数
+function openModal(filename, title) {
     modalTitle.textContent = title;
-    modalContent.innerHTML = '<p class="text-gray-500">読み込み中...</p>'; // ローディング表示
     
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden'; 
 
-    // 歌詞ファイルをフェッチ
-    const lyricContent = await fetchContent(filename);
-    
-    // 歌詞本文を表示 (改行を <br> に変換)
-    modalContent.innerHTML = `<div class="lyric-content">${lyricContent.replace(/\n/g, '<br>')}</div>`;
+    // 初期化時に読み込んだデータから該当の歌詞を検索
+    const lyricData = ALL_LYRICS_DATA.find(lyric => lyric.filename === filename);
 
-    // アニメーション
-    setTimeout(() => {
-        modal.querySelector('div').classList.remove('scale-95');
-        modal.querySelector('div').classList.add('scale-100');
-    }, 10);
+    if (lyricData) {
+        // 取得済みの歌詞本文を表示 (改行を <br> に変換)
+        modalContent.innerHTML = lyricData.content.replace(/\n/g, '<br>');
+    } else {
+        // データが見つからない場合のエラー表示
+        modalContent.innerHTML = '<p>エラー: 歌詞データを読み込めませんでした。</p>';
+    }
 }
 
-// 4. モーダルを閉じる関数
+// モーダルを閉じる関数
 function closeModal() {
-    modal.querySelector('div').classList.remove('scale-100');
-    modal.querySelector('div').classList.add('scale-95');
-    setTimeout(() => {
-        modal.classList.add('hidden');
-    }, 300);
+    modal.classList.add('hidden');
     document.body.style.overflow = '';
 }
 
 // イベントリスナーの設定
 searchInput.addEventListener('input', handleSearch);
 closeModalTopButton.addEventListener('click', closeModal); 
-navHome.addEventListener('click', () => showPage('home'));
-navProfile.addEventListener('click', () => showPage('profile'));
+navHome.addEventListener('click', (e) => { e.preventDefault(); showPage('home'); });
+navProfile.addEventListener('click', (e) => { e.preventDefault(); showPage('profile'); });
 
 // モーダル背景クリックで閉じる
 modal.addEventListener('click', (e) => {
@@ -166,7 +189,28 @@ document.addEventListener('keydown', (e) => {
 });
 
 // 初期表示
-window.onload = () => {
-    renderLyrics(LYRIC_FILENAMES);
+async function initialize() {
+    const filenames = await fetchLyricManifest();
+    
+    // 各歌詞ファイルの内容を全て取得し、データ構造を構築
+    const lyricsDataPromises = filenames.map(async (filename) => {
+        const content = await fetchContent(filename);
+        const lines = content.split('\n');
+        
+        // 1行目をタイトル、2行目をアーティストとして解釈
+        const title = lines[0] || filename.replace(/\.txt$/, '');
+        const artist = lines[1] || '';
+        // 歌詞本文（4行目以降）からプレビューを生成
+        const bodyLines = lines.slice(3);
+        const preview = bodyLines.slice(0, 2).join('<br>');
+
+        return { filename, title, artist, content, preview };
+    });
+
+    ALL_LYRICS_DATA = await Promise.all(lyricsDataPromises);
+
+    renderLyrics(ALL_LYRICS_DATA);
     showPage('home'); // Homeページを初期表示
-};
+}
+
+document.addEventListener('DOMContentLoaded', initialize);
