@@ -7,6 +7,14 @@
     --font-family-base: 'Shippori Mincho', serif;
 }
 
+/* --- ダークモード用変数 --- */
+body.dark-mode {
+    --color-text: #e2e8f0;
+    --color-background: #1a202c;
+    --color-border: #4a5568;
+}
+
+
 body {
     font-family: var(--font-family-base);
     background-color: var(--color-background);
@@ -14,6 +22,7 @@ body {
     line-height: 1.75;
     font-size: 16px;
     margin: 0;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 /* --- レイアウト --- */
@@ -62,6 +71,21 @@ body {
     border-color: var(--color-accent);
     font-weight: 600;
 }
+
+/* --- テーマ切り替えボタン --- */
+.theme-toggle-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text);
+    padding: 0.5rem;
+    margin-left: 0.5rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.theme-toggle-button:hover { background-color: rgba(128, 128, 128, 0.1); }
 
 /* --- ページタイトル --- */
 .page-title {
@@ -135,12 +159,15 @@ body {
 
 /* --- プロフィールページ --- */
 .profile-card {
-    background-color: #fdfdfd;
+    background-color: var(--color-background);
     border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 2rem;
 }
-
+.profile-card ul { list-style: none; padding-left: 0; }
+.profile-card a { color: var(--color-accent); text-decoration: none; }
+.profile-card a:hover { text-decoration: underline; }
+.dark-mode .profile-card { background-color: #2d3748; }
 .profile-card h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; }
 .profile-card h4 { font-size: 1.1rem; font-weight: 600; margin-top: 1rem; }
 .profile-card br { display: block; content: ""; margin-top: 1rem; }
