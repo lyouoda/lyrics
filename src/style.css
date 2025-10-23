@@ -96,9 +96,11 @@ body {
 
 /* 各ボタンの位置 */
 .floating-button-theme {
+    left: 1.5rem;
     right: 1.5rem;
 }
 .floating-button-back {
+    right: 1.5rem;
     left: 1.5rem;
 }
 
@@ -277,6 +279,7 @@ body {
 .lyric-page-container {
     padding-top: 2rem;
     padding-bottom: 2rem;
+    padding-bottom: 6rem; /* 戻るボタンとの重なりを避けるため、下部の余白を増やす */
 }
 
 .lyric-page-artist {
