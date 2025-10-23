@@ -1,15 +1,14 @@
-# 作成者について
+## About Me
 
-このサイトは、個人的に創作した詩や歌詞を静かに保存しておくための場所です。
+このサイトは、私の個人的な歌詞コレクションです。
+日々の思いつきやメロディを言葉にして書き留めています。
 
-## 理念
+### 制作について
 
-言葉が持つ静けさと深みを大切にし、特に日本の美意識に通じる「しっぽり」とした情感を表現することを目指しています。
+作詞と作曲を趣味としています。
+このサイトはGitHub Pagesと素のJavaScriptでシンプルに作られています。
 
-公開されている作品は、感情の断片や、日常の中で見つけた小さな風景を切り取ったものです。
+### リンク
 
-## お問い合わせ
-
-Twitter/X: @my_personal_poetry (架空)
-
-Email: lyric.collector@example.com (架空)
+- GitHub: [lyouoda](https://github.com/lyouoda)
+- X (Twitter): [your-username](https://twitter.com/your-username)
