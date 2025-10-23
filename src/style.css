@@ -72,14 +72,13 @@ body {
     font-weight: 600;
 }
 
-/* --- テーマ切り替えボタン --- */
 /* フローティングボタンの共通スタイル */
 .floating-button {
     position: fixed;
     z-index: 40; /* モーダル(50)よりは下、ヘッダー(10)よりは上 */
     bottom: 1.5rem;
 
-    background-color: var(--color-background);
+    background-color: var(--color-background); /* ボタンの背景色 */
     border: none;
     cursor: pointer;
     color: var(--color-text);
@@ -96,10 +95,10 @@ body {
 
 /* 各ボタンの位置 */
 .floating-button-theme {
-    right: 1.5rem; /* 左側に配置 */
+    right: 1.5rem; /* 右下に配置 */
 }
 .floating-button-back {
-    left: 1.5rem; /* 右側に配置 */
+    left: 1.5rem; /* 左下に配置 */
 }
 
 /* --- ページタイトル --- */
