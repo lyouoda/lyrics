@@ -74,18 +74,25 @@ body {
 
 /* --- テーマ切り替えボタン --- */
 .theme-toggle-button {
-    background: none;
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 40; /* モーダル(50)よりは下、ヘッダー(10)よりは上 */
+
+    background-color: var(--color-background);
     border: none;
     cursor: pointer;
     color: var(--color-text);
-    padding: 0.5rem;
-    margin-left: 0.5rem;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
 }
-.theme-toggle-button:hover { background-color: rgba(128, 128, 128, 0.1); }
+.theme-toggle-button:hover { transform: translateY(-2px); }
 
 /* --- ページタイトル --- */
 .page-title {
