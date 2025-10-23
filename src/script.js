@@ -1,7 +1,7 @@
 // 設定
 const MANIFEST_URL = 'https://lyouoda.github.io/lyrics/lyrics/manifest.json'; // 歌詞リストのJSON
-const PROFILE_FILENAME = 'profile.md';
 const LYRICS_BASE_URL = 'https://lyouoda.github.io/lyrics/lyrics/';
+const PROFILE_URL = 'https://lyouoda.github.io/lyrics/profile.md'; // プロフィールファイルの絶対URL
 
 // グローバル変数
 /**
@@ -46,9 +46,9 @@ async function fetchContent(filename) {
     try {
         let path;
 
-        if (filename === PROFILE_FILENAME) {
+        if (filename === PROFILE_URL) {
             // プロフィールはサイトのルートからフェッチ
-            path = filename; 
+            path = PROFILE_URL;
         } else {
             // 歌詞ファイルは外部URLからフェッチ
             // 例: https://lyouoda.github.io/lyrics/lyrics/yume.txt
@@ -85,7 +85,7 @@ async function showPage(page) {
         // プロフィール内容をロード
         if (profileContent.textContent === 'Loading profile...') {
             // profile.md はローカルから読み込む
-            const content = await fetchContent(PROFILE_FILENAME);
+            const content = await fetchContent(PROFILE_URL);
 
             // 簡易的なMarkdownパーサー
             const htmlContent = content
