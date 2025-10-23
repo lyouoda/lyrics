@@ -96,12 +96,10 @@ body {
 
 /* 各ボタンの位置 */
 .floating-button-theme {
-    left: 1.5rem;
-    right: 1.5rem;
+    right: 1.5rem; /* 左側に配置 */
 }
 .floating-button-back {
-    right: 1.5rem;
-    left: 1.5rem;
+    left: 1.5rem; /* 右側に配置 */
 }
 
 /* --- ページタイトル --- */
@@ -147,6 +145,8 @@ body {
     font-size: 1rem;
     font-family: var(--font-family-base);
     transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: var(--color-background);
+    color: var(--color-text);
 }
 
 .search-input:focus {
