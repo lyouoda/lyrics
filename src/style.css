@@ -1,72 +1,202 @@
-/* Google Fontsより「しっぽり明朝」を全体に適用し、上品なフォントスタイルを設定 */
+/* --- 基本設定 & 変数 --- */
+:root {
+    --color-text: #333;
+    --color-background: #fff;
+    --color-accent: #c53030; /* 赤系の差し色 */
+    --color-border: #e2e8f0;
+    --font-family-base: 'Shippori Mincho', serif;
+}
+
 body {
-    font-family: 'Shippori Mincho', serif;
-    background-color: #F8F8F8; /* 薄いグレー */
-    color: #333333;
+    font-family: var(--font-family-base);
+    background-color: var(--color-background);
+    color: var(--color-text);
     line-height: 1.75;
     font-size: 16px;
+    margin: 0;
 }
 
-/* ヘッダーのスタイル - クリーンな白を再現 */
-header {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    background-color: white;
+/* --- レイアウト --- */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1.5rem;
 }
 
-/* Material Symbolsの基本スタイル */
-.material-symbols-outlined {
-    font-size: 24px;
-    color: #555555;
+/* --- ヘッダー & ナビゲーション --- */
+.site-header {
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    background-color: var(--color-background);
+    z-index: 10;
 }
 
-/* メインの歌詞カードのスタイル */
+.site-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.site-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.nav-link {
+    margin-left: 1.5rem;
+    text-decoration: none;
+    color: var(--color-text);
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--color-accent);
+}
+
+.nav-link.active {
+    border-color: var(--color-accent);
+    font-weight: 600;
+}
+
+/* --- ページタイトル --- */
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.5rem;
+}
+
+/* --- 検索 --- */
+.search-container {
+    margin-bottom: 2rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: var(--font-family-base);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px rgba(197, 48, 48, 0.2);
+}
+
+/* --- 歌詞カード --- */
+.lyrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
 .lyric-card {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid #E0E0E0;
-    background-color: white; 
-    border-radius: 8px; /* 角丸を大きく (4px -> 8px) */
-    box-shadow: none; 
 }
+
 .lyric-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); /* ホバー時の影を少し強調 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* 歌詞本文の整形 */
-.lyric-content {
-    white-space: pre-wrap;
-    text-align: left;
-    line-height: 2.0;
+.lyric-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+}
+
+.lyric-preview {
+    font-size: 0.9rem;
+    color: #666;
+    height: 3.2em; /* 2行分程度の高さ */
+    overflow: hidden;
+    position: relative;
+}
+
+.no-results-message {
+    text-align: center;
+    padding: 4rem 0;
+    color: #777;
+}
+
+/* --- プロフィールページ --- */
+.profile-card {
+    background-color: #fdfdfd;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+.profile-card h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; }
+.profile-card h4 { font-size: 1.1rem; font-weight: 600; margin-top: 1rem; }
+.profile-card br { display: block; content: ""; margin-top: 1rem; }
+
+/* --- モーダル --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 50;
+}
+
+.modal-container {
+    background-color: var(--color-background);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.modal-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.modal-close-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin: -0.5rem; /* クリック範囲を広げる */
+    color: #888;
+    transition: color 0.2s;
+}
+.modal-close-button:hover { color: var(--color-text); }
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    line-height: 2.2;
     font-size: 1.05rem;
-    color: #444;
-}
-
-/* 検索フォームの装飾 */
-#search-input {
-    transition: border-color 0.2s;
-    border-radius: 8px; /* 角丸を大きく (4px -> 8px) */
-}
-#search-input:focus {
-    border-color: #BBBBBB; 
-    box-shadow: 0 0 0 1px #BBBBBB;
-}
-
-/* モーダル本体の角丸 */
-.modal-content-area {
-    border-radius: 12px; /* モーダルはさらに大きく */
-}
-
-/* 歌詞表示モーダルの背景 */
-.modal-bg {
-    background-color: rgba(0, 0, 0, 0.6); 
-}
-
-/* プロフィールコンテンツのテキスト整形 */
-#profile-content br {
-    display: block; /* Markdown改行を反映 */
-    content: "";
-    margin-top: 10px; /* 段落間にスペース */
-}
-#profile-content h3 {
-    margin-top: 20px;
 }
