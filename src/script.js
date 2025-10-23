@@ -1,7 +1,6 @@
 // 設定
 const MANIFEST_URL = 'https://lyouoda.github.io/lyrics/lyrics/manifest.json'; // 歌詞リストのJSON
 const LYRICS_BASE_URL = 'https://lyouoda.github.io/lyrics/lyrics/';
-const PROFILE_URL = 'https://lyouoda.github.io/lyrics/profile.md'; // プロフィールファイルの絶対URL
 
 // グローバル変数
 /**
@@ -21,9 +20,9 @@ const modalContent = document.getElementById('modal-content');
 const closeModalTopButton = document.getElementById('close-modal-top'); 
 const pageHome = document.getElementById('page-home');
 const pageProfile = document.getElementById('page-profile');
-const profileContent = document.getElementById('profile-content');
 const navHome = document.getElementById('nav-home');
 const navProfile = document.getElementById('nav-profile');
+const themeToggleButton = document.getElementById('theme-toggle');
 
 // 歌詞リスト(manifest.json)を読み込む
 async function fetchLyricManifest() {
@@ -57,7 +56,7 @@ async function fetchContent(url) {
 
 // ページ切り替え関数
 async function showPage(page) {
-    if (currentPage === page && page === 'profile' && profileContent.innerHTML !== '<p>Loading profile...</p>') return;
+    if (currentPage === page) return;
 
     currentPage = page;
     navHome.classList.remove('active');
@@ -71,21 +70,6 @@ async function showPage(page) {
         pageHome.classList.add('hidden');
         pageProfile.classList.remove('hidden');
         navProfile.classList.add('active');
-        // プロフィール内容をロード
-        if (profileContent.textContent === 'Loading profile...') {
-            // profile.md はローカルから読み込む
-            const content = await fetchContent(PROFILE_URL);
-
-            // 簡易的なMarkdownパーサー
-            const htmlContent = content
-                .replace(/^## (.*$)/gim, '<h3>$1</h3>') // ##をh3に
-                .replace(/^### (.*$)/gim, '<h4>$1</h4>') // ###をh4に
-                // [text](url) を <a href="url" target="_blank">text</a> に変換
-                .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
-                .replace(/\n\n/g, '<br><br>'); // 連続改行を段落区切りに
-
-            profileContent.innerHTML = htmlContent;
-        }
     }
 }
 
@@ -157,11 +141,30 @@ function closeModal() {
     document.body.style.overflow = '';
 }
 
+// --- テーマ切り替え ---
+function applyTheme(theme) {
+    if (theme === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeToggleButton.querySelector('.material-symbols-outlined').textContent = 'dark_mode';
+    } else {
+        document.body.classList.remove('dark-mode');
+        themeToggleButton.querySelector('.material-symbols-outlined').textContent = 'light_mode';
+    }
+}
+
+function toggleTheme() {
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    const newTheme = isDarkMode ? 'light' : 'dark';
+    localStorage.setItem('theme', newTheme);
+    applyTheme(newTheme);
+}
+
 // イベントリスナーの設定
 searchInput.addEventListener('input', handleSearch);
 closeModalTopButton.addEventListener('click', closeModal); 
 navHome.addEventListener('click', (e) => { e.preventDefault(); showPage('home'); });
 navProfile.addEventListener('click', (e) => { e.preventDefault(); showPage('profile'); });
+themeToggleButton.addEventListener('click', toggleTheme);
 
 // モーダル背景クリックで閉じる
 modal.addEventListener('click', (e) => {
@@ -179,6 +182,10 @@ document.addEventListener('keydown', (e) => {
 
 // 初期表示
 async function initialize() {
+    // 保存されたテーマを適用
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
     const filenames = await fetchLyricManifest();
     
     // 各歌詞ファイルの内容を全て取得し、データ構造を構築
