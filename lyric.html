@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歌詞</title>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+    <a href="index.html" class="floating-button floating-button-back" aria-label="ホームに戻る">
+        <span class="material-symbols-outlined">
+            arrow_back
+        </span>
+    </a>
+    <main class="container lyric-page-container">
+        <h1 id="lyric-title">読み込み中...</h1>
+        <p id="lyric-artist" class="lyric-page-artist"></p>
+        <div id="lyric-content" class="lyric-page-content">
+            <!-- 歌詞本文がここに挿入されます -->
+        </div>
+    </main>
+
+    <button id="theme-toggle" class="floating-button floating-button-theme" aria-label="テーマを切り替える">
+        <span class="material-symbols-outlined">light_mode</span>
+    </button>
+
+    <script src="src/lyric-page.js"></script>
+</body>
+</html>

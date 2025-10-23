@@ -4,7 +4,7 @@ const LYRICS_BASE_URL = 'https://lyouoda.github.io/lyrics/lyrics/';
 
 // グローバル変数
 /**
- * @type {Array<{filename: string, title: string, artist: string, content: string, preview: string}>}
+ * @type {Array<{filename: string, title: string, artist: string, date: string, content: string, preview: string}>}
  * 全ての歌詞データを保持する配列
  */
 let ALL_LYRICS_DATA = [];
@@ -13,11 +13,13 @@ let currentPage = 'home'; // ページ状態管理
 // DOM要素
 const lyricsList = document.getElementById('lyrics-list');
 const searchInput = document.getElementById('search-input');
+const sortSelect = document.getElementById('sort-select');
 const noResults = document.getElementById('no-results');
 const modal = document.getElementById('lyric-modal');
 const modalTitle = document.getElementById('modal-title');
 const modalContent = document.getElementById('modal-content');
 const closeModalTopButton = document.getElementById('close-modal-top'); 
+const openInNewTabButton = document.getElementById('open-in-new-tab');
 const pageHome = document.getElementById('page-home');
 const pageProfile = document.getElementById('page-profile');
 const navHome = document.getElementById('nav-home');
@@ -99,20 +101,35 @@ function renderLyrics(lyrics) {
     });
 }
 
-// 検索機能
-function handleSearch() {
+// 検索と並び替えをハンドリングする関数
+function updateDisplay() {
     const query = searchInput.value.toLowerCase().trim();
+    const sortOrder = sortSelect.value;
 
-    if (query === '') {
-        renderLyrics(ALL_LYRICS_DATA);
-        return;
+    // 1. 検索フィルタリング
+    let filteredData;
+    if (query) {
+        filteredData = ALL_LYRICS_DATA.filter(lyric => {
+            return lyric.title.toLowerCase().includes(query) || lyric.content.toLowerCase().includes(query);
+        });
+    } else {
+        filteredData = [...ALL_LYRICS_DATA];
     }
 
-    const filteredData = ALL_LYRICS_DATA.filter(lyric => {
-        return lyric.title.toLowerCase().includes(query) || lyric.content.toLowerCase().includes(query);
+    // 2. 並び替え
+    switch (sortOrder) {
+        case 'newest':
+            filteredData.sort((a, b) => b.date.localeCompare(a.date));
+            break;
+        case 'oldest':
+            filteredData.sort((a, b) => a.date.localeCompare(b.date));
+            break;
+        case 'name-asc':
+            filteredData.sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+            break;
     }
-    );
 
+    // 3. 描画
     renderLyrics(filteredData);
 }
 
@@ -120,6 +137,9 @@ function handleSearch() {
 function openModal(filename, title) {
     modalTitle.textContent = title;
     
+    // 新しいタブで開くリンクのURLを設定
+    openInNewTabButton.href = `lyric.html?file=${filename}`;
+
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden'; 
 
@@ -160,7 +180,8 @@ function toggleTheme() {
 }
 
 // イベントリスナーの設定
-searchInput.addEventListener('input', handleSearch);
+searchInput.addEventListener('input', updateDisplay);
+sortSelect.addEventListener('change', updateDisplay);
 closeModalTopButton.addEventListener('click', closeModal); 
 navHome.addEventListener('click', (e) => { e.preventDefault(); showPage('home'); });
 navProfile.addEventListener('click', (e) => { e.preventDefault(); showPage('profile'); });
@@ -197,16 +218,17 @@ async function initialize() {
         // 1行目をタイトル、2行目をアーティストとして解釈
         const title = lines[0] || filename.replace(/\.txt$/, '');
         const artist = lines[1] || '';
-        // 歌詞本文（4行目以降）からプレビューを生成
-        const bodyLines = lines.slice(3);
+        const date = lines[2] || '1970-01-01'; // 3行目を日付として解釈、なければデフォルト値
+        // 歌詞本文（5行目以降）からプレビューを生成
+        const bodyLines = lines.slice(4);
         const preview = bodyLines.slice(0, 2).join('<br>');
 
-        return { filename, title, artist, content, preview };
+        return { filename, title, artist, date, content, preview };
     });
 
     ALL_LYRICS_DATA = await Promise.all(lyricsDataPromises);
 
-    renderLyrics(ALL_LYRICS_DATA);
+    updateDisplay(); // 初期表示
     showPage('home'); // Homeページを初期表示
 }
 

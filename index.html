@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>歌詞帖</title>
+    <title>しっぽり歌詞帖 - 個人コレクション</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
@@ -15,7 +15,7 @@
     <header class="site-header">
         <div class="container">
             <h1 class="site-title">
-                歌詞帖
+                しっぽり歌詞帖
             </h1>
             <nav>
                 <a href="#" id="nav-home" class="nav-link">
@@ -31,9 +31,18 @@
     <main class="container">
         
         <section id="page-home">
-            <div class="search-container">
-                <input type="text" id="search-input" placeholder="曲名で検索..."
-                       class="search-input">
+            <div class="controls-container">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="曲名で検索..."
+                           class="search-input">
+                </div>
+                <div class="sort-container">
+                    <select id="sort-select" class="sort-select">
+                        <option value="newest">新しい順</option>
+                        <option value="oldest">古い順</option>
+                        <option value="name-asc">名前順</option>
+                    </select>
+                </div>
             </div>
 
             <div id="lyrics-list" class="lyrics-grid"></div>
@@ -59,7 +68,7 @@
                 <h4>リンク</h4>
                 <ul>
                     <li>GitHub: <a href="https://github.com/lyouoda" target="_blank" rel="noopener noreferrer">lyouoda</a></li>
-                    <li>X (Twitter): <a href="https://x.com/ll424i" target="_blank" rel="noopener noreferrer">🐦</a></li>
+                    <li>X (Twitter): <a href="https://twitter.com/your-username" target="_blank" rel="noopener noreferrer">your-username</a></li>
                 </ul>
             </div>
         </section>
@@ -69,9 +78,14 @@
         <div class="modal-container">
             <div class="modal-header">
                 <h2 id="modal-title" class="modal-title"></h2>
-                <button id="close-modal-top" class="modal-close-button" aria-label="モーダルを閉じる">
-                    <span class="material-symbols-outlined">close</span>
-                </button>
+                <div class="modal-header-actions">
+                    <a id="open-in-new-tab" href="#" target="_blank" class="modal-icon-button" aria-label="新しいタブで開く">
+                        <span class="material-symbols-outlined">open_in_new</span>
+                    </a>
+                    <button id="close-modal-top" class="modal-icon-button" aria-label="モーダルを閉じる">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
             </div>
             <div id="modal-content" class="modal-body">
             </div>

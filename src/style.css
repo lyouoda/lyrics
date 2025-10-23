@@ -73,11 +73,11 @@ body {
 }
 
 /* --- テーマ切り替えボタン --- */
-.theme-toggle-button {
+/* フローティングボタンの共通スタイル */
+.floating-button {
     position: fixed;
-    bottom: 2rem;
-    right: 2rem;
     z-index: 40; /* モーダル(50)よりは下、ヘッダー(10)よりは上 */
+    bottom: 1.5rem;
 
     background-color: var(--color-background);
     border: none;
@@ -92,7 +92,15 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
 }
-.theme-toggle-button:hover { transform: translateY(-2px); }
+.floating-button:hover { transform: translateY(-2px); }
+
+/* 各ボタンの位置 */
+.floating-button-theme {
+    right: 1.5rem;
+}
+.floating-button-back {
+    left: 1.5rem;
+}
 
 /* --- ページタイトル --- */
 .page-title {
@@ -104,8 +112,29 @@ body {
 }
 
 /* --- 検索 --- */
-.search-container {
+.controls-container {
+    display: flex;
+    gap: 1rem;
     margin-bottom: 2rem;
+    align-items: center;
+}
+
+.search-container {
+    flex-grow: 1;
+}
+
+.sort-select {
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-family-base);
+    height: 100%;
+}
+.sort-select:focus {
+    outline: none;
+    border-color: var(--color-accent);
 }
 
 .search-input {
@@ -217,20 +246,47 @@ body {
     margin: 0;
 }
 
-.modal-close-button {
+.modal-header-actions {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* アイコン群を右に寄せる */
+}
+
+.modal-icon-button {
     background: none;
     border: none;
     cursor: pointer;
     padding: 0.5rem;
-    margin: -0.5rem; /* クリック範囲を広げる */
     color: #888;
     transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
-.modal-close-button:hover { color: var(--color-text); }
+.modal-icon-button:hover { color: var(--color-text); }
+
 
 .modal-body {
     padding: 1.5rem;
     overflow-y: auto;
     line-height: 2.2;
     font-size: 1.05rem;
+}
+
+/* --- lyric.html専用スタイル --- */
+.lyric-page-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.lyric-page-artist {
+    color: #888;
+    margin-top: -1rem;
+    margin-bottom: 2rem;
+}
+
+.lyric-page-content {
+    line-height: 2.2;
+    font-size: 1.05rem;
+    white-space: pre-wrap; /* 改行を反映させる */
 }
