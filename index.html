@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>タイトル</title>
+    <title>しっぽり歌詞帖 - 個人コレクション</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
@@ -15,7 +15,7 @@
     <header class="site-header">
         <div class="container">
             <h1 class="site-title">
-                歌詞
+                しっぽり歌詞帖
             </h1>
             <nav>
                 <a href="#" id="nav-home" class="nav-link">
@@ -24,6 +24,9 @@
                 <a href="#" id="nav-profile" class="nav-link">
                     Profile
                 </a>
+                <button id="theme-toggle" class="theme-toggle-button" aria-label="テーマを切り替える">
+                    <span class="material-symbols-outlined">light_mode</span>
+                </button>
             </nav>
         </div>
     </header>
@@ -45,8 +48,22 @@
 
         <section id="page-profile" class="hidden">
             <h2 class="page-title">Profile</h2>
-            <div id="profile-content" class="profile-card">
-                <p>Loading profile...</p>
+            <div class="profile-card">
+                <h3>About Me</h3>
+                <p>
+                    このサイトは、私の個人的な歌詞コレクションです。<br>
+                    日々の思いつきやメロディを言葉にして書き留めています。
+                </p>
+
+                <h4>制作について</h4>
+                <p>作詞と作曲を趣味としています。<br>
+                このサイトはGitHub Pagesと素のJavaScriptでシンプルに作られています。</p>
+
+                <h4>リンク</h4>
+                <ul>
+                    <li>GitHub: <a href="https://github.com/lyouoda" target="_blank" rel="noopener noreferrer">lyouoda</a></li>
+                    <li>X (Twitter): <a href="https://twitter.com/your-username" target="_blank" rel="noopener noreferrer">your-username</a></li>
+                </ul>
             </div>
         </section>
     </main>
